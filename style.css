@@ -6,8 +6,8 @@
   --ink:#0b0f14;
   --muted:#5c6b73;
   --border:#d9e2ec;
-  --bot-bubble:#f4f7fa;
-  --you-bubble:#0a3a6a;
+  --bot-bubble:#f4f7fa;    /* bot bubble background */
+  --you-bubble:#0a3a6a;    /* user bubble */
 
   --radius:16px;
   --shadow:0 6px 20px rgba(0,0,0,.08);
@@ -39,8 +39,12 @@ body{
 .title{margin:0;font-weight:700;font-size:28px;letter-spacing:.2px}
 .subtitle{margin:2px 0 0;font-size:14px;opacity:.9}
 
-/* Chips bar (sticky; no hamburger) */
-.chips-bar{position:sticky;top:12px;z-index:10;padding-top:12px;background:transparent}
+/* Chips bar (non-sticky) */
+.chips-bar{
+  position:static;
+  padding-top:12px;
+  background:transparent;
+}
 .suggest{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 6px}
 .chip{
   border:2px solid var(--primary-blue);
@@ -49,7 +53,7 @@ body{
 }
 .chip:hover{background:var(--primary-blue);color:#fff}
 
-/* Chat */
+/* Chat stream */
 .chat{display:flex;flex-direction:column;gap:14px;margin-top:8px}
 
 /* Bubbles */
@@ -69,16 +73,21 @@ body{
 .msg.bot .bubble::after{left:16px;bottom:-10px;border-top-color:var(--bot-bubble)}
 .msg.you .bubble::after{right:16px;bottom:-10px;border-top-color:var(--you-bubble)}
 
-/* Sender */
+/* Sender label */
 .sender{display:block;font-size:12px;opacity:.65;margin-bottom:4px}
 
-/* Actions */
+/* Actions (buttons under messages) */
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
 .action-btn{
   padding:10px 14px;border-radius:10px;font-weight:700;text-decoration:none;
   background:var(--primary-blue);color:#fff;border:2px solid var(--primary-blue);
 }
 .action-btn:hover{background:#002a4d;border-color:#002a4d}
+
+/* Inline options injected into chat */
+.inline-options{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:8px
+}
 
 /* Composer */
 .composer{
@@ -115,6 +124,9 @@ body{
   .chip{width:100%;justify-content:center;border-radius:14px}
   .bubble{max-width:92%}
   .composer button{padding:0 16px}
+  /* Inline options: stack vertically on mobile */
+  .inline-options{flex-direction:column;gap:12px}
+  .inline-options .chip{width:100%;justify-content:center;border-radius:14px}
 }
 
 /* Reduced motion */
