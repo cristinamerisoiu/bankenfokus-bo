@@ -1,14 +1,12 @@
-// BankenFokus-Assistent – static (no backend)
 // Desktop: chips row under header
 // Mobile: top-left hamburger opens a left drawer with 4 big stacked options
 // No chips inside messages
 
-const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de"; // set real URL if available
+const PDF_URL     = "https://YOUR_CDN/BankenFokus.pdf"; // set real URL if available
 const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
 const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
-const CLONE_URL   = "https://www.peterka.ai/;
+const CLONE_URL   = "https://peterka.ai";
 
-// Elements
 const chatBox      = document.getElementById("chat-box");
 const suggest      = document.getElementById("suggest");
 const form         = document.getElementById("chat-form");
@@ -19,7 +17,6 @@ const drawer       = document.getElementById("menu-drawer");
 const drawerClose  = document.getElementById("menu-close");
 const drawerOpts   = document.getElementById("drawer-options");
 
-// Options
 const CHIPS = [
   "Kurzüberblick",
   "Nutzen fürs Haus",
@@ -27,7 +24,6 @@ const CHIPS = [
   "Christophers Clone"
 ];
 
-// Copy
 const ANSWERS = {
   "Kurzüberblick":
     "Der Impuls zeigt, wie Führung in vernetzten Systemen handlungsfähig bleibt: klare Rollen zwischen Mensch & Maschine, Entscheidungen mit Daten UND Erfahrung sowie klare Prioritäten für Effizienz & Wirkung.",
@@ -42,7 +38,6 @@ const ANSWERS = {
     "Für weitere Informationen können Sie Christophers Clone öffnen oder einen Gesprächstermin buchen."
 };
 
-// Helpers
 function addMessage(sender, text, who='bot'){
   const wrap = document.createElement('div');
   wrap.className = `msg ${who==='you' ? 'you' : 'bot'}`;
@@ -82,7 +77,6 @@ function showTypingThen(handler, delay=600){
   setTimeout(()=>{ wrap.remove(); handler(); }, delay);
 }
 
-// Desktop chips row
 function renderChipsRow(){
   suggest.innerHTML = '';
   CHIPS.forEach(label=>{
@@ -95,7 +89,6 @@ function renderChipsRow(){
   });
 }
 
-// Drawer options (mobile)
 function renderDrawerOptions(){
   drawerOpts.innerHTML = '';
   CHIPS.forEach(label=>{
@@ -111,12 +104,11 @@ function renderDrawerOptions(){
   });
 }
 
-// Drawer controls (mobile)
 function openDrawer(){
   drawer.classList.add('open');
   drawer.setAttribute('aria-hidden', 'false');
   menuBtn.setAttribute('aria-expanded', 'true');
-  document.body.classList.add('no-scroll');   // lock body scroll
+  document.body.classList.add('no-scroll');
 }
 function closeDrawer(){
   drawer.classList.remove('open');
@@ -125,7 +117,6 @@ function closeDrawer(){
   document.body.classList.remove('no-scroll');
 }
 
-// Events for drawer
 menuBtn.addEventListener('click', ()=> {
   if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
 });
@@ -137,7 +128,6 @@ document.addEventListener('keydown', (e)=>{
   if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
 });
 
-// Free-text routing
 function routeText(q){
   const t = (q||'').toLowerCase();
   if (/überblick|worum|intro|einführung/.test(t)) return "Kurzüberblick";
@@ -147,7 +137,6 @@ function routeText(q){
   return null;
 }
 
-// Chip handler
 function onChip(label, skipEcho=false){
   if (!skipEcho){
     const echo = document.createElement('div');
@@ -190,7 +179,6 @@ function onChip(label, skipEcho=false){
   }
 }
 
-// Submit (free text)
 form.addEventListener('submit', (e)=>{
   e.preventDefault();
   const val = input.value.trim();
@@ -216,10 +204,8 @@ form.addEventListener('submit', (e)=>{
   }
 });
 
-// Init
 (function init(){
   addMessage('BankenFokus-Assistent', 'Willkommen. Bitte wählen Sie eine Option.', 'bot');
   renderChipsRow();       // desktop chips
   renderDrawerOptions();  // mobile drawer options
 })();
-
