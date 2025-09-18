@@ -9,6 +9,15 @@
 <body>
   <main class="app" aria-label="BankenFokus-Assistent">
     <header class="header">
+      <!-- MOBILE-ONLY HAMBURGER (top-left) -->
+      <button id="menu-btn" class="menu-btn" aria-label="Optionen"
+              aria-controls="menu-drawer" aria-expanded="false" title="Optionen">
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+      </button>
+
+      <!-- Brand -->
       <div class="brand">
         <div class="mark" aria-hidden="true">V</div>
         <div class="titles">
@@ -18,19 +27,12 @@
       </div>
     </header>
 
-    <!-- Chips row (desktop only) -->
+    <!-- Desktop chips row (hidden on mobile) -->
     <div class="chips-bar">
       <section id="suggest" class="suggest" aria-label="Schnelloptionen"></section>
     </div>
 
-    <!-- MOBILE: floating hamburger + drawer -->
-    <button id="menu-btn" class="menu-btn" aria-label="Optionen"
-            aria-expanded="false" aria-controls="menu-drawer" title="Optionen">
-      <span class="menu-bar"></span>
-      <span class="menu-bar"></span>
-      <span class="menu-bar"></span>
-    </button>
-
+    <!-- MOBILE DRAWER (slides over content from left) -->
     <div id="menu-drawer" class="drawer" aria-hidden="true">
       <div class="drawer-backdrop" data-close="true"></div>
       <div class="drawer-panel" role="dialog" aria-label="Optionen">
