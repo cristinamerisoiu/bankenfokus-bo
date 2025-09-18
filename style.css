@@ -7,8 +7,8 @@
   --ink:#0b0f14;
   --muted:#5c6b73;
   --border:#d9e2ec;
-  --bot-bubble:#f4f7fa; /* bot bubble background */
-  --you-bubble:#0a3a6a; /* close to your existing user blue */
+  --bot-bubble:#f4f7fa;    /* bot bubble background */
+  --you-bubble:#0a3a6a;    /* user bubble */
 
   --radius:16px;
   --shadow:0 6px 20px rgba(0,0,0,.08);
@@ -20,18 +20,18 @@ body{
   margin:0;
   background:var(--bg);
   color:var(--ink);
-  font: 16px/1.6 system-ui, -apple-system, Segoe UI, Inter, Roboto, Helvetica, Arial, sans-serif;
+  font:16px/1.6 system-ui,-apple-system,Segoe UI,Inter,Roboto,Helvetica,Arial,sans-serif;
 }
 
 .app{max-width:880px;margin:0 auto;padding:24px 16px 110px}
 
-/* Header: keep your gradient + rounded */
+/* Header: gradient + rounded (unchanged look) */
 .header{
   display:flex;align-items:center;justify-content:space-between;
   padding:18px;
   border:2px solid var(--primary-blue);
   border-radius:22px;
-  background:linear-gradient(90deg, var(--primary-blue) 0%, #754b3e 55%, var(--primary-orange) 100%);
+  background:linear-gradient(90deg,var(--primary-blue) 0%, #754b3e 55%, var(--primary-orange) 100%);
   color:#fff;
   box-shadow:0 8px 24px rgba(0,0,0,.06);
 }
@@ -44,8 +44,11 @@ body{
 .title{margin:0;font-weight:700;font-size:28px;letter-spacing:.2px}
 .subtitle{margin:2px 0 0;font-size:14px;opacity:.9}
 
-/* Chips bar (sticky-ish block with collapsible behavior) */
-.chips-bar{position:sticky;top:12px;background:#fff;z-index:10;padding-top:12px}
+/* Chips bar (sticky + collapsible) */
+.chips-bar{position:sticky;top:12px;z-index:10;padding-top:12px;background:#fff;}
+/* Transparent feel when collapsed */
+.chips-bar.collapsed{background:transparent;padding-top:8px;}
+
 .suggest{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 6px}
 .chip{
   border:2px solid var(--primary-blue);
@@ -53,11 +56,14 @@ body{
   cursor:pointer;font-weight:600;
 }
 .chip:hover{background:var(--primary-blue);color:#fff}
+
+/* Toggle shown only when collapsed; transparent */
 .chips-toggle{
-  display:none; /* shown only when collapsed */
+  display:none;
   border:2px solid var(--primary-blue);
-  background:#fff;color:var(--primary-blue);
-  padding:10px 14px;border-radius:999px;font-weight:700;cursor:pointer
+  background:transparent;color:var(--primary-blue);
+  padding:10px 14px;border-radius:999px;font-weight:700;cursor:pointer;
+  box-shadow:0 4px 18px rgba(0,59,112,.08);
 }
 .chips-bar.collapsed .suggest{display:none}
 .chips-bar.collapsed .chips-toggle{display:inline-flex}
@@ -77,20 +83,15 @@ body{
   animation:enter .15s ease-out both;
 }
 .msg.you .bubble{
-  background:var(--you-bubble); color:#fff; border-color:transparent;
+  background:var(--you-bubble);color:#fff;border-color:transparent;
 }
 
 /* Bubble tails */
 .bubble::after{
-  content:""; position:absolute; width:0; height:0;
-  border:10px solid transparent;
+  content:"";position:absolute;width:0;height:0;border:10px solid transparent;
 }
-.msg.bot .bubble::after{
-  left:16px; bottom:-10px; border-top-color:var(--bot-bubble);
-}
-.msg.you .bubble::after{
-  right:16px; bottom:-10px; border-top-color:var(--you-bubble);
-}
+.msg.bot .bubble::after{left:16px;bottom:-10px;border-top-color:var(--bot-bubble)}
+.msg.you .bubble::after{right:16px;bottom:-10px;border-top-color:var(--you-bubble)}
 
 /* Sender label */
 .sender{display:block;font-size:12px;opacity:.65;margin-bottom:4px}
@@ -127,19 +128,23 @@ body{
 }
 .dot:nth-child(2){animation-delay:.2s}
 .dot:nth-child(3){animation-delay:.4s}
-@keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
 
 /* Bubble entrance */
-@keyframes enter {
-  from {opacity:0; transform:translateY(8px)}
-  to   {opacity:1; transform:translateY(0)}
+@keyframes enter{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
-/* Mobile tweaks */
+/* --------- Mobile tweaks --------- */
 @media (max-width:640px){
   .subtitle{display:none}
+
+  /* Stack chips one per line on mobile */
+  .suggest{flex-direction:column;gap:12px}
+  .chip{width:100%;justify-content:center;border-radius:14px}
+
   .bubble{max-width:92%}
-  .chip{padding:12px 16px}
   .composer button{padding:0 16px}
 }
 
