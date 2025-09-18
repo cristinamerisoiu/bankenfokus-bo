@@ -1,10 +1,10 @@
 // BankenFokus-Assistent – static, zero-backend, robust init + real buttons.
 
 // ---------- CONFIG ----------
-const PDF_URL     = "https://YOUR_CDN/BankenFokus.pdf"; // put real link if you have it
+const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de"; // put real link if you have it
 const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
 const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
-const PAI_URL     = "https://peterka.ai";
+const PAI_URL     = "https://www.peterka.ai/";
 
 // ---------- STATE / ELEMS ----------
 let chatBox, form, input, suggest;
@@ -14,10 +14,6 @@ const CHIPS = [
   "Kurzüberblick",
   "Nutzen fürs Haus",
   "Termin / Unterlagen",
-  "Zielgruppe",
-  "Dauer & Format",
-  "Sicherheit",
-  "Honorar"
 ];
 
 const ANSWERS = {
@@ -43,12 +39,12 @@ const ANSWERS = {
 const ACTION_SETS = {
   MEETINGS: [
     { label: "PDF ansehen",             url: PDF_URL },
-    { label: "Termin buchen (HubSpot)", url: MEETING_URL },
+    { label: "Termin buchen", url: MEETING_URL },
     { label: "Zur Landingpage",         url: LP_URL }
   ],
   FALLBACK: [
     { label: "Mehr auf peterka.ai",     url: PAI_URL },
-    { label: "Termin buchen (HubSpot)", url: MEETING_URL }
+    { label: "Termin buchen", url: MEETING_URL }
   ]
 };
 
@@ -204,3 +200,4 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
