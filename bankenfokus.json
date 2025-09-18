@@ -1,5 +1,58 @@
 {
-  "overview": "Der Impuls zeigt, wie Führung in vernetzten Systemen handlungsfähig bleibt: Rollen zwischen Mensch & Maschine, Entscheidungen mit Daten + Erfahrung, klare Prioritäten für Effizienz und Wirkung.",
-  "benefits": "Nutzen fürs Haus: bessere Entscheidungsqualität, effizientere Abläufe, geschärfte Rollenprofile, eine 3–6 Monats-Roadmap.",
-  "meet": "Optionen:\n\n- PDF anfordern: [Download](https://YOUR_CDN/BankenFokus.pdf)\n- Direkt Termin via [Calendly](https://calendly.com/YOUR-SLOT)\n- Zur [Landingpage](https://gannaca.de/genossenschaftsbanken)"
+  "suggest": ["Kurzüberblick", "Nutzen fürs Haus", "Termin / Unterlagen", "Zielgruppe", "Dauer & Format", "Sicherheit", "Honorar"],
+  "intents": [
+    {
+      "id": "overview",
+      "keywords": ["kurzüberblick", "überblick", "was ist der impuls", "worum geht es", "überblick bitte"],
+      "answer": "Der Impuls zeigt, wie Führung in vernetzten Systemen handlungsfähig bleibt: klare Rollen zwischen Mensch und Maschine, Entscheidungen mit Daten UND Erfahrung sowie klare Prioritäten für Effizienz und Wirkung. Ergebnis ist Orientierung in einem komplexen Umfeld – ohne Buzzwords, mit klaren nächsten Schritten.",
+      "suggest": ["Nutzen fürs Haus", "Dauer & Format", "Termin / Unterlagen"]
+    },
+    {
+      "id": "benefits",
+      "keywords": ["nutzen", "bringt", "mehrwert", "ergebnis", "ergebnisse", "business case"],
+      "answer": "Nutzen fürs Haus: bessere Entscheidungsqualität, effizientere Abläufe, geschärfte Rollenprofile und eine Roadmap für 3–6 Monate. Entscheidend ist die Übersetzung in die konkrete Praxis Ihres Hauses – nicht Theorie.",
+      "suggest": ["Zielgruppe", "Dauer & Format", "Termin / Unterlagen"]
+    },
+    {
+      "id": "meet",
+      "keywords": ["termin", "unterlagen", "pdf", "kontakt", "call", "kalender", "calendly", "buchung", "meeting"],
+      "answer": "Gern. Sie können die Unterlagen ansehen oder direkt einen Termin buchen.",
+      "actions": [
+        { "label": "PDF ansehen", "url": "https://YOUR_CDN/BankenFokus.pdf" },
+        { "label": "Termin buchen (HubSpot)", "url": "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-" },
+        { "label": "Zur Landingpage", "url": "https://gannaca.de/genossenschaftsbanken" }
+      ],
+      "suggest": ["Zielgruppe", "Sicherheit", "Honorar"]
+    },
+    {
+      "id": "audience",
+      "keywords": ["zielgruppe", "für wen", "publikum", "vorstand", "führungskräfte", "multiplikatoren"],
+      "answer": "Typische Zielgruppen: Vorstand (3–6 Personen), Führungskräfte (10–30), Multiplikatoren (30+). Der Impuls skaliert: Strategie-Workshop im kleinen Kreis oder fokussierter Entscheidungs-Input in größerer Runde.",
+      "suggest": ["Dauer & Format", "Termin / Unterlagen"]
+    },
+    {
+      "id": "format",
+      "keywords": ["dauer", "format", "ablauf", "agenda", "zeit", "umfang"],
+      "answer": "Empfohlenes Format: 60–90 Minuten Impuls + Diskussion. Optional anschließende Vertiefung (2–3h) für Roadmap und Verantwortlichkeiten. Online oder vor Ort, je nach Zielsetzung.",
+      "suggest": ["Sicherheit", "Termin / Unterlagen"]
+    },
+    {
+      "id": "security",
+      "keywords": ["sicherheit", "datenschutz", "ds-gvo", "compliance"],
+      "answer": "Sicherheit & Datenschutz: Keine produktiven Kundendaten nötig. Wir arbeiten mit anonymisierten Beispielen und klarer DS-GVO-Konformität. Auf Wunsch NDA und vorab technische Klärung.",
+      "suggest": ["Honorar", "Termin / Unterlagen"]
+    },
+    {
+      "id": "pricing",
+      "keywords": ["honorar", "preis", "kosten", "angebot"],
+      "answer": "Honorar: pauschal, abhängig von Format und Teilnehmerzahl. Transparente Festlegung vorab; keine versteckten Positionen. Bei Interesse: kurzes Vorgespräch, dann erhalten Sie das Angebot.",
+      "suggest": ["Termin / Unterlagen"]
+    }
+  ],
+  "fallback": {
+    "id": "fallback",
+    "keywords": [],
+    "answer": "Bitte wählen Sie eine der Optionen: Kurzüberblick, Nutzen fürs Haus, Termin / Unterlagen, Zielgruppe, Dauer & Format, Sicherheit, Honorar.",
+    "suggest": ["Kurzüberblick", "Nutzen fürs Haus", "Termin / Unterlagen"]
+  }
 }
