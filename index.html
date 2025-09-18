@@ -4,32 +4,32 @@
   <meta charset="utf-8" />
   <title>BankenFokus-Assistent</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app" aria-label="BankenFokus-Assistent">
     <header class="header">
       <div class="brand">
-        <div class="mark" aria-hidden="true">B</div>
+        <div class="mark" aria-hidden="true">V</div>
         <div class="titles">
           <h1 class="title">BankenFokus-Assistent</h1>
-          <p class="subtitle">Kurz. Präzise. Für Genossenschaftsbanken.</p>
+          <p class="subtitle">Für Genossenschaftsbanken. Klar&Präzise</p>
         </div>
       </div>
+      <!-- Action pill to the AI clone -->
+      <a class="top-cta" href="https://peterka.ai" target="_blank" rel="noopener" aria-label="peterka.ai öffnen">
+        <span class="dot"></span><span class="label">Christophers Clone</span>
+      </a>
     </header>
 
     <section id="suggest" class="suggest"></section>
     <section id="chat-box" class="chat" aria-live="polite"></section>
 
     <form id="chat-form" class="composer" autocomplete="off">
-      <input id="user-input" type="text" placeholder="(Optional) Tippen Sie hier …" aria-label="Ihre Eingabe" />
-      <button type="submit" aria-label="Senden">Senden</button>
+      <input id="user-input" type="text" placeholder="Fragen tippen oder oben wählen … (Tipp: /peterka)" aria-label="Ihre Eingabe" />
+      <button type="submit">Senden</button>
     </form>
   </main>
-
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
