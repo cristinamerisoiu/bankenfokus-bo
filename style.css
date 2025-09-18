@@ -3,7 +3,7 @@
   --primary-orange:#ff6600;
 
   --bg:#ffffff;
-  --ink:#0b0f14;
+  --ink:#0b0f14;          /* black-ish for hamburger lines */
   --muted:#5c6b73;
   --border:#d9e2ec;
   --bot-bubble:#f4f7fa;
@@ -24,8 +24,9 @@ body{
 
 .app{max-width:880px;margin:0 auto;padding:24px 16px 110px}
 
-/* Header (keep your look) */
+/* Header (keeps your gradient look) */
 .header{
+  position:relative;
   display:flex;align-items:center;justify-content:space-between;
   padding:18px;border:2px solid var(--primary-blue);border-radius:22px;
   background:linear-gradient(90deg,var(--primary-blue) 0%, #754b3e 55%, var(--primary-orange) 100%);
@@ -39,7 +40,7 @@ body{
 .title{margin:0;font-weight:700;font-size:28px;letter-spacing:.2px}
 .subtitle{margin:2px 0 0;font-size:14px;opacity:.9}
 
-/* Chips bar (shown on desktop, hidden on mobile) */
+/* Desktop chips row (hidden on mobile) */
 .chips-bar{position:static;padding-top:12px;background:transparent}
 .suggest{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 6px}
 .chip{
@@ -108,30 +109,32 @@ body{
 /* Bubble entrance */
 @keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* --------- MOBILE-ONLY HAMBURGER + DRAWER --------- */
+/* --------- MOBILE HAMBURGER + DRAWER --------- */
 .menu-btn{
-  display:none; /* desktop hidden */
-  position:fixed;left:14px;bottom:88px;z-index:20;
-  width:48px;height:48px;border-radius:50%;
-  background:#fff;border:2px solid var(--primary-blue);color:var(--primary-blue);
-  box-shadow:0 8px 18px rgba(0,0,0,.12);align-items:center;justify-content:center;
+  display:none;             /* shown only on mobile */
+  position:absolute;left:10px;top:10px;z-index:5;
+  width:40px;height:36px;padding:6px 8px;background:transparent;border:none;cursor:pointer;
 }
-.menu-bar{display:block;width:22px;height:3px;background:var(--primary-blue);margin:3px 0;border-radius:3px}
+.menu-bar{display:block;width:22px;height:2px;background:var(--ink);margin:4px 0;border-radius:2px}
 
+/* Drawer: overlay on mobile; hidden on desktop */
 .drawer{display:none}
 .drawer.open{display:block}
 .drawer-backdrop{
-  position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:saturate(120%) blur(1px)
+  position:fixed;inset:0;background:rgba(0,0,0,.25);backdrop-filter:saturate(120%) blur(1px);z-index:30;
 }
 .drawer-panel{
-  position:fixed;left:0;top:0;bottom:0;width:82%;
-  max-width:360px;background:#fff;border-right:2px solid var(--primary-blue);
-  box-shadow:10px 0 30px rgba(0,0,0,.18);transform:translateX(-100%);transition:transform .22s ease-out
+  position:fixed;left:0;top:0;bottom:0;width:82%;max-width:360px;z-index:31;
+  background:#fff;border-right:2px solid var(--primary-blue);
+  box-shadow:10px 0 30px rgba(0,0,0,.18);transform:translateX(-100%);
+  transition:transform .18s ease-out;
+  padding-top:env(safe-area-inset-top, 0px);
 }
 .drawer.open .drawer-panel{transform:none}
 .drawer-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 14px 8px;border-bottom:1px solid var(--border);font-weight:800;color:var(--primary-blue)
+  padding:14px;border-bottom:1px solid var(--border);
+  font-weight:800;color:var(--primary-blue)
 }
 .drawer-close{
   background:#fff;border:2px solid var(--primary-blue);border-radius:10px;
@@ -140,14 +143,18 @@ body{
 .drawer-options{padding:14px;display:flex;flex-direction:column;gap:12px}
 .drawer-options .chip{width:100%;justify-content:center;border-radius:14px}
 
-/* Mobile visibility rules */
+/* Mobile visibility + spacing adjustments */
 @media (max-width:640px){
   .subtitle{display:none}
-  .chips-bar{display:none}            /* hide chips row on mobile */
-  .menu-btn{display:flex}             /* show hamburger */
+  .chips-bar{display:none}                 /* hide desktop chips on mobile */
+  .menu-btn{display:block}                 /* show hamburger */
+  .header{padding-left:56px}               /* make room so it doesn't overlap brand */
   .bubble{max-width:92%}
   .composer button{padding:0 16px}
 }
+
+/* Prevent background scroll when drawer is open */
+body.no-scroll{overflow:hidden}
 
 /* Reduced motion */
 @media (prefers-reduced-motion:reduce){
