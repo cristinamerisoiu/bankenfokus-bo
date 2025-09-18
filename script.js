@@ -1,88 +1,110 @@
-// Static, minimal assistant with intent matching + quick chips (no backend).
+// BankenFokus-Assistent – static, zero-backend.
+// Drop-in for your current index.html + style.css.
 
+// ---------- CONFIG ----------
+const PDF_URL       = "https://YOUR_CDN/BankenFokus.pdf"; // put the real PDF link here
+const MEETING_URL   = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
+const LP_URL        = "https://gannaca.de/genossenschaftsbanken";
+const PAI_URL       = "https://peterka.ai"; // Peterka Intelligence
+
+// ---------- ELEMENTS ----------
 const chatBox = document.getElementById("chat-box");
-const form = document.getElementById("chat-form");
-const input = document.getElementById("user-input");
+const form    = document.getElementById("chat-form");
+const input   = document.getElementById("user-input");
 const suggest = document.getElementById("suggest");
 
-let KB = null; // loaded from bankenfokus.json
+// ---------- CONTENT ----------
+const CHIPS = [
+  "Kurzüberblick",
+  "Nutzen fürs Haus",
+  "Termin / Unterlagen",
+  "Zielgruppe",
+  "Dauer & Format",
+  "Sicherheit",
+  "Honorar"
+];
 
-// --- Utils ---
-function escapeHtml(s=''){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function toHtml(md=''){
-  let t = escapeHtml(md);
-  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  t = t.replace(/_(.+?)_/g, '<em>$1</em>');
-  t = t.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
-  t = t.replace(/\n{2,}/g, '</p><p>');
-  return `<p>${t}</p>`;
+const ANSWERS = {
+  "Kurzüberblick":
+    "Der Impuls zeigt, wie Führung in vernetzten Systemen handlungsfähig bleibt: klare Rollen zwischen Mensch & Maschine, Entscheidungen mit Daten UND Erfahrung sowie klare Prioritäten für Effizienz & Wirkung.",
+
+  "Nutzen fürs Haus":
+    "Ergebnisse: bessere Entscheidungsqualität, effizientere Abläufe, geschärfte Rollenprofile und eine Roadmap für 3–6 Monate. Fokus auf die konkrete Praxis Ihres Hauses – nicht Theorie.",
+
+  "Zielgruppe":
+    "Typische Zielgruppen: Vorstand (3–6 Personen), Führungskräfte (10–30), Multiplikatoren (30+). Skalierbar vom Strategie-Kreis bis zum Entscheidungs-Input für größere Runden.",
+
+  "Dauer & Format":
+    "Empfehlung: 60–90 Minuten Impuls + Diskussion. Optional Vertiefung (2–3h) für Roadmap & Verantwortlichkeiten. Online oder vor Ort – je nach Zielsetzung.",
+
+  "Sicherheit":
+    "Sicherheit & Datenschutz: Keine produktiven Kundendaten notwendig. Anonymisierte Beispiele, DS-GVO-konform. Auf Wunsch NDA und technische Klärung vorab.",
+
+  "Honorar":
+    "Pauschalhonorar, abhängig von Format und Teilnehmerzahl. Transparent, ohne versteckte Positionen. Kurzes Vorgespräch – dann erhalten Sie das Angebot."
+};
+
+// buttons that appear under certain answers
+const ACTIONS = {
+  "Termin / Unterlagen": [
+    { label: "PDF ansehen",            url: PDF_URL },
+    { label: "Termin buchen (HubSpot)", url: MEETING_URL },
+    { label: "Zur Landingpage",         url: LP_URL }
+  ],
+  // shown for off-topic / unknown queries
+  "_fallback": [
+    { label: "Mehr auf peterka.ai",     url: PAI_URL },
+    { label: "Termin buchen (HubSpot)", url: MEETING_URL }
+  ]
+};
+
+// ---------- UTIL ----------
+function escapeHtml(s=''){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
-
-function addMessage(sender, msg, who='bot'){
+function addMessage(sender, text, who='bot'){
   const wrap = document.createElement('div');
-  wrap.className = `msg ${who==='you'?'you':'bot'}`;
+  wrap.className = `msg ${who === 'you' ? 'you' : 'bot'}`;
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
-  bubble.innerHTML = `<span class="sender">${escapeHtml(sender)}</span>${toHtml(msg)}`;
+  bubble.innerHTML = `<span class="sender">${escapeHtml(sender)}</span><p>${escapeHtml(text)}</p>`;
   wrap.appendChild(bubble);
   chatBox.appendChild(wrap);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-function renderChips(labels=[]){
+function renderActions(key){
+  const actions = ACTIONS[key] || [];
+  if(!actions.length) return;
+  const holder = document.createElement('div');
+  holder.className = 'actions';
+  actions.forEach(a=>{
+    const link = document.createElement('a');
+    link.className = 'action-btn';
+    link.href = a.url;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = a.label;
+    holder.appendChild(link);
+  });
+  const last = chatBox.lastElementChild?.querySelector('.bubble');
+  if (last) last.appendChild(holder);
+}
+function renderChips(){
   suggest.innerHTML = '';
-  labels.forEach(label=>{
-    const chip = document.createElement('button');
-    chip.type = 'button';
-    chip.className = 'chip';
-    chip.textContent = label;
-    chip.addEventListener('click', ()=> handleQuery(label));
-    suggest.appendChild(chip);
+  CHIPS.forEach(label=>{
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = label;
+    b.addEventListener('click', ()=> onChip(label));
+    suggest.appendChild(b);
   });
 }
 
-async function loadKB(){
-  const res = await fetch('bankenfokus.json'); // same origin
-  KB = await res.json();
-}
-
-function matchIntent(q){
-  const text = q.toLowerCase();
-  for(const intent of KB.intents){
-    const hit = intent.keywords.some(k => text.includes(k.toLowerCase()));
-    if(hit) return intent;
-  }
-  return KB.fallback;
-}
-
-function handleActions(intent){
-  if(!intent || !intent.actions) return '';
-  const parts = intent.actions.map(a => `• <a href="${a.url}" target="_blank" rel="noopener">${a.label}</a>`);
-  return parts.length ? `\n\n${parts.join('\n')}` : '';
-}
-
-async function handleQuery(userMsg){
-  addMessage('Sie', userMsg, 'you');
-  const intent = matchIntent(userMsg);
-  const actions = handleActions(intent);
-  addMessage('BankenFokus-Assistent', `${intent.answer}${actions}`, 'bot');
-  // refresh suggestions if provided
-  if (intent.suggest && intent.suggest.length) renderChips(intent.suggest);
-}
-
-form.addEventListener('submit', (e)=>{
-  e.preventDefault();
-  const val = input.value.trim();
-  if(!val) return;
-  input.value = '';
-  handleQuery(val);
-});
-
-// init
-(async function init(){
-  await loadKB();
-  addMessage('BankenFokus-Assistent',
-    'Willkommen. Wählen Sie einen Einstieg:\n\n1) Kurzüberblick\n2) Was bringt das meinem Haus?\n3) Termin / Unterlagen'
-  );
-  renderChips(KB.suggest || ['Kurzüberblick','Nutzen fürs Haus','Termin / Unterlagen','Zielgruppe','Dauer & Format','Sicherheit','Honorar']);
-})();
+// ---------- INTENT MATCHING (fuzzy, keyword score) ----------
+const INTENTS = [
+  { key: "Kurzüberblick",    kws: ["überblick","kurzüberblick","worum","was ist","einführung","summary","intro"] },
+  { key: "Nutzen fürs Haus", kws: ["nutzen","mehrwert","bringt","ergebnis","outcome","business case","vorteil"] },
+  { key: "Termin / Unterlagen", kws: ["termin","unterlagen","meeting","kalender","buchen","hubspot","pdf","call"] },
+  { key: "Zielgruppe",       kws: ["zielgruppe","publikum","für wen","vorstand","führung","multiplikatoren","teilnehmer"] },
+  { key: "Dauer & Format",   kws: ["dauer","format","ablauf","ag]()
