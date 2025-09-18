@@ -18,9 +18,28 @@
       </div>
     </header>
 
-    <!-- Chips (non-sticky; scrolls away) -->
+    <!-- Chips row (desktop only) -->
     <div class="chips-bar">
       <section id="suggest" class="suggest" aria-label="Schnelloptionen"></section>
+    </div>
+
+    <!-- MOBILE: floating hamburger + drawer -->
+    <button id="menu-btn" class="menu-btn" aria-label="Optionen"
+            aria-expanded="false" aria-controls="menu-drawer" title="Optionen">
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+    </button>
+
+    <div id="menu-drawer" class="drawer" aria-hidden="true">
+      <div class="drawer-backdrop" data-close="true"></div>
+      <div class="drawer-panel" role="dialog" aria-label="Optionen">
+        <div class="drawer-header">
+          <span>Optionen</span>
+          <button id="menu-close" class="drawer-close" aria-label="Schließen">×</button>
+        </div>
+        <div id="drawer-options" class="drawer-options" aria-label="Optionen Liste"></div>
+      </div>
     </div>
 
     <!-- Chat stream -->
