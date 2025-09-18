@@ -1,10 +1,10 @@
 // BankenFokus-Assistent – static, no backend.
-// Chips always visible (no toggle). Typing indicator, bubble tails (CSS), mobile polish.
+// NEW: chips are not sticky; inline options are injected into the chat after each bot reply.
 
-const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de"; // set if you have it
+const PDF_URL     = "https://YOUR_CDN/BankenFokus.pdf"; // set real URL if available
 const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
 const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
-const CLONE_URL   = "https://www.peterka.ai/";
+const CLONE_URL   = "https://peterka.ai";
 
 // Elements
 const chatBox = document.getElementById("chat-box");
@@ -75,6 +75,28 @@ function showTypingThen(handler, delay=600){
   setTimeout(()=>{ wrap.remove(); handler(); }, delay);
 }
 
+// Inject chips as inline options inside the last bot bubble
+function addInlineOptions(){
+  const lastBubble = chatBox.lastElementChild?.querySelector('.bubble');
+  if (!lastBubble) return;
+
+  const box = document.createElement('div');
+  box.className = 'inline-options';
+
+  CHIPS.forEach(lbl=>{
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = lbl;
+    b.addEventListener('click', ()=> onChip(lbl));
+    box.appendChild(b);
+  });
+
+  lastBubble.appendChild(box);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// Render chips row (top, non-sticky)
 function renderChips(){
   suggest.innerHTML = '';
   CHIPS.forEach(label=>{
@@ -111,6 +133,7 @@ function onChip(label, skipEcho=false){
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', 'Christophers Clone wird in einem neuen Tab geöffnet.', 'bot');
       window.open(CLONE_URL, '_blank', 'noopener');
+      addInlineOptions();
     });
     return;
   }
@@ -119,16 +142,20 @@ function onChip(label, skipEcho=false){
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot');
       addActions([
-        { label:'PDF ansehen', url: PDF_URL },
-        { label:'Termin buchen', url: MEETING_URL },
-        { label:'Zur Landingpage', url: LP_URL }
+        { label:'PDF ansehen',    url: PDF_URL },
+        { label:'Termin buchen',  url: MEETING_URL },
+        { label:'Zur Landingpage',url: LP_URL }
       ]);
+      addInlineOptions();
     });
     return;
   }
 
   if (ANSWERS[label]) {
-    showTypingThen(()=> addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot'));
+    showTypingThen(()=>{
+      addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot');
+      addInlineOptions();
+    });
   } else {
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
@@ -136,6 +163,7 @@ function onChip(label, skipEcho=false){
         { label:'Clone öffnen',  url: CLONE_URL },
         { label:'Termin buchen', url: MEETING_URL }
       ]);
+      addInlineOptions();
     });
   }
 }
@@ -155,7 +183,7 @@ form.addEventListener('submit', (e)=>{
 
   const mapped = routeText(val);
   if (mapped) {
-    onChip(mapped, true);
+    onChip(mapped, true); // reuse same path (with typing + inline options)
   } else {
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
@@ -163,6 +191,7 @@ form.addEventListener('submit', (e)=>{
         { label:'Clone öffnen',  url: CLONE_URL },
         { label:'Termin buchen', url: MEETING_URL }
       ]);
+      addInlineOptions();
     });
   }
 });
@@ -171,4 +200,5 @@ form.addEventListener('submit', (e)=>{
 (function init(){
   addMessage('BankenFokus-Assistent', 'Willkommen. Bitte wählen Sie eine Option.', 'bot');
   renderChips();
+  addInlineOptions(); // show options immediately in the first bot bubble
 })();
