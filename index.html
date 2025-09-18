@@ -13,23 +13,27 @@
         <div class="mark" aria-hidden="true">V</div>
         <div class="titles">
           <h1 class="title">BankenFokus-Assistent</h1>
-          <p class="subtitle">Für Genossenschaftsbanken. Klar&Präzise</p>
+          <p class="subtitle">Für Genossenschaftsbanken. Klar&nbsp;&amp;&nbsp;Präzise</p>
         </div>
       </div>
-      <!-- Action pill to the AI clone -->
-      <a class="top-cta" href="https://peterka.ai" target="_blank" rel="noopener" aria-label="peterka.ai öffnen">
-        <span class="dot"></span><span class="label">Christophers Clone</span>
-      </a>
     </header>
 
-    <section id="suggest" class="suggest"></section>
+    <!-- Chips row (collapsible on scroll) -->
+    <div class="chips-bar">
+      <button id="chips-toggle" class="chips-toggle" type="button" aria-expanded="true">+ Optionen</button>
+      <section id="suggest" class="suggest" aria-label="Schnelloptionen"></section>
+    </div>
+
+    <!-- Chat stream -->
     <section id="chat-box" class="chat" aria-live="polite"></section>
 
+    <!-- Composer -->
     <form id="chat-form" class="composer" autocomplete="off">
-      <input id="user-input" type="text" placeholder="Fragen tippen oder oben wählen … (Tipp: /peterka)" aria-label="Ihre Eingabe" />
-      <button type="submit">Senden</button>
+      <input id="user-input" type="text" placeholder="Option oben wählen" aria-label="Ihre Eingabe" />
+      <button type="submit" aria-label="Senden">Senden</button>
     </form>
   </main>
+
   <script src="script.js" defer></script>
 </body>
 </html>
