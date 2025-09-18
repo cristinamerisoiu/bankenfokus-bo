@@ -3,7 +3,7 @@
   --primary-orange:#ff6600;
 
   --bg:#ffffff;
-  --ink:#0b0f14;          /* black-ish for hamburger lines */
+  --ink:#0b0f14;
   --muted:#5c6b73;
   --border:#d9e2ec;
   --bot-bubble:#f4f7fa;
@@ -24,7 +24,7 @@ body{
 
 .app{max-width:880px;margin:0 auto;padding:24px 16px 110px}
 
-/* Header (keeps your gradient look) */
+/* Header */
 .header{
   position:relative;
   display:flex;align-items:center;justify-content:space-between;
@@ -115,17 +115,17 @@ body{
   position:absolute;left:10px;top:10px;z-index:5;
   width:40px;height:36px;padding:6px 8px;background:transparent;border:none;cursor:pointer;
 }
+/* WHITE lines */
 .menu-bar{
   display:block;
   width:22px;
   height:2px;
-  background:#fff;              /* white lines */
+  background:#fff;
   margin:4px 0;
   border-radius:2px;
-  box-shadow:0 0 0 1px rgba(0,0,0,.04); /* subtle outline for contrast */
+  box-shadow:0 0 0 1px rgba(0,0,0,.04);
 }
 
-/* Drawer: overlay on mobile; hidden on desktop */
 .drawer{display:none}
 .drawer.open{display:block}
 .drawer-backdrop{
@@ -151,12 +151,12 @@ body{
 .drawer-options{padding:14px;display:flex;flex-direction:column;gap:12px}
 .drawer-options .chip{width:100%;justify-content:center;border-radius:14px}
 
-/* Mobile visibility + spacing adjustments */
+/* Mobile visibility + spacing */
 @media (max-width:640px){
   .subtitle{display:none}
-  .chips-bar{display:none}                 /* hide desktop chips on mobile */
-  .menu-btn{display:block}                 /* show hamburger */
-  .header{padding-left:56px}               /* make room so it doesn't overlap brand */
+  .chips-bar{display:none}
+  .menu-btn{display:block}
+  .header{padding-left:56px}
   .bubble{max-width:92%}
   .composer button{padding:0 16px}
 }
@@ -169,4 +169,3 @@ body.no-scroll{overflow:hidden}
   .bubble{animation:none}
   .dot{animation:none}
 }
-
