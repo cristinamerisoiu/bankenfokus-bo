@@ -1,19 +1,16 @@
 // BankenFokus-Assistent – static, no backend.
-// Adds typing indicator, bubble tails (via CSS), sticky + transparent “+ Optionen”,
-// mobile chip stacking, and fixes “Termin und Unterlagen” actions.
+// Chips always visible (no toggle). Typing indicator, bubble tails (CSS), mobile polish.
 
-const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de"; // <-- set real PDF if you have it
+const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de"; // set if you have it
 const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
 const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
 const CLONE_URL   = "https://www.peterka.ai/";
 
 // Elements
-const chatBox     = document.getElementById("chat-box");
-const suggest     = document.getElementById("suggest");
-const form        = document.getElementById("chat-form");
-const input       = document.getElementById("user-input");
-const chipsToggle = document.getElementById("chips-toggle");
-const chipsBar    = document.querySelector(".chips-bar");
+const chatBox = document.getElementById("chat-box");
+const suggest = document.getElementById("suggest");
+const form    = document.getElementById("chat-form");
+const input   = document.getElementById("user-input");
 
 // Chips
 const CHIPS = [
@@ -38,10 +35,10 @@ const ANSWERS = {
     "Für weitere Informationen können Sie Christophers Clone öffnen oder einen Gesprächstermin buchen."
 };
 
-// Render helpers
+// Helpers
 function addMessage(sender, text, who='bot'){
   const wrap = document.createElement('div');
-  wrap.className = `msg ${who==='you'?'you':'bot'}`;
+  wrap.className = `msg ${who==='you' ? 'you' : 'bot'}`;
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
   bubble.innerHTML = `<span class="sender">${sender}</span><p>${text}</p>`;
@@ -57,9 +54,7 @@ function addActions(actions){
   actions.forEach(a=>{
     const link = document.createElement('a');
     link.className = 'action-btn';
-    link.href = a.url;
-    link.target = '_blank';
-    link.rel = 'noopener';
+    link.href = a.url; link.target = '_blank'; link.rel = 'noopener';
     link.textContent = a.label;
     holder.appendChild(link);
   });
@@ -68,7 +63,6 @@ function addActions(actions){
 }
 
 function showTypingThen(handler, delay=600){
-  // Typing indicator message
   const wrap = document.createElement('div');
   wrap.className = 'msg bot typing';
   wrap.innerHTML = `
@@ -78,11 +72,7 @@ function showTypingThen(handler, delay=600){
     </div>`;
   chatBox.appendChild(wrap);
   chatBox.scrollTop = chatBox.scrollHeight;
-
-  setTimeout(()=>{
-    wrap.remove();
-    handler();
-  }, delay);
+  setTimeout(()=>{ wrap.remove(); handler(); }, delay);
 }
 
 function renderChips(){
@@ -97,20 +87,7 @@ function renderChips(){
   });
 }
 
-// Sticky chips collapse/expand
-function updateChipsBar(){
-  const collapsed = window.scrollY > 120;
-  chipsBar.classList.toggle('collapsed', collapsed);
-  chipsToggle.setAttribute('aria-expanded', String(!collapsed));
-}
-window.addEventListener('scroll', updateChipsBar);
-chipsToggle.addEventListener('click', ()=>{
-  const willOpen = chipsBar.classList.contains('collapsed');
-  chipsBar.classList.toggle('collapsed', !willOpen);
-  chipsToggle.setAttribute('aria-expanded', String(willOpen));
-});
-
-// Router
+// Routing for free text
 function routeText(q){
   const t = (q||'').toLowerCase();
   if (/überblick|worum|intro|einführung/.test(t)) return "Kurzüberblick";
@@ -122,11 +99,11 @@ function routeText(q){
 
 // Handlers
 function onChip(label, skipEcho=false){
-  if (!skipEcho) {
-    const you = document.createElement('div');
-    you.className = 'msg you';
-    you.innerHTML = `<div class="bubble"><span class="sender">Sie</span><p>${label}</p></div>`;
-    chatBox.appendChild(you);
+  if (!skipEcho){
+    const echo = document.createElement('div');
+    echo.className = 'msg you';
+    echo.innerHTML = `<div class="bubble"><span class="sender">Sie</span><p>${label}</p></div>`;
+    chatBox.appendChild(echo);
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
@@ -142,7 +119,7 @@ function onChip(label, skipEcho=false){
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot');
       addActions([
-        { label:'PDF ansehen',   url: PDF_URL },
+        { label:'PDF ansehen', url: PDF_URL },
         { label:'Termin buchen', url: MEETING_URL },
         { label:'Zur Landingpage', url: LP_URL }
       ]);
@@ -151,9 +128,7 @@ function onChip(label, skipEcho=false){
   }
 
   if (ANSWERS[label]) {
-    showTypingThen(()=>{
-      addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot');
-    });
+    showTypingThen(()=> addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot'));
   } else {
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
@@ -165,7 +140,7 @@ function onChip(label, skipEcho=false){
   }
 }
 
-// Submit
+// Submit (free text)
 form.addEventListener('submit', (e)=>{
   e.preventDefault();
   const val = input.value.trim();
@@ -180,8 +155,7 @@ form.addEventListener('submit', (e)=>{
 
   const mapped = routeText(val);
   if (mapped) {
-    // use same flow as chips (with typing)
-    onChip(mapped, /*skipEcho*/ true);
+    onChip(mapped, true);
   } else {
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
@@ -197,5 +171,4 @@ form.addEventListener('submit', (e)=>{
 (function init(){
   addMessage('BankenFokus-Assistent', 'Willkommen. Bitte wählen Sie eine Option.', 'bot');
   renderChips();
-  updateChipsBar();
 })();
