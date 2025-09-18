@@ -2,10 +2,10 @@
 // Mobile: top-left hamburger opens a left drawer with 4 big stacked options
 // No chips inside messages
 
-const PDF_URL     = "https://YOUR_CDN/BankenFokus.pdf"; // set real URL if available
+const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de"; // set real URL if available
 const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
 const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
-const CLONE_URL   = "https://peterka.ai";
+const CLONE_URL   = "https://www.peterka.ai/";
 
 const chatBox      = document.getElementById("chat-box");
 const suggest      = document.getElementById("suggest");
@@ -209,3 +209,4 @@ form.addEventListener('submit', (e)=>{
   renderChipsRow();       // desktop chips
   renderDrawerOptions();  // mobile drawer options
 })();
+
