@@ -115,7 +115,15 @@ body{
   position:absolute;left:10px;top:10px;z-index:5;
   width:40px;height:36px;padding:6px 8px;background:transparent;border:none;cursor:pointer;
 }
-.menu-bar{display:block;width:22px;height:2px;background:var(--ink);margin:4px 0;border-radius:2px}
+.menu-bar{
+  display:block;
+  width:22px;
+  height:2px;
+  background:#fff;              /* white lines */
+  margin:4px 0;
+  border-radius:2px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.04); /* subtle outline for contrast */
+}
 
 /* Drawer: overlay on mobile; hidden on desktop */
 .drawer{display:none}
@@ -161,3 +169,4 @@ body.no-scroll{overflow:hidden}
   .bubble{animation:none}
   .dot{animation:none}
 }
+
