@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>BankenFokus-Assistent</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
+  <meta name="color-scheme" content="dark" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
@@ -16,15 +16,16 @@
         <div class="mark" aria-hidden="true">B</div>
         <div class="titles">
           <h1 class="title">BankenFokus-Assistent</h1>
-          <p class="subtitle">Fragen Sie nach Überblick, Nutzen oder Termin.</p>
+          <p class="subtitle">Kurz. Präzise. Für Genossenschaftsbanken.</p>
         </div>
       </div>
     </header>
 
+    <section id="suggest" class="suggest"></section>
     <section id="chat-box" class="chat" aria-live="polite"></section>
 
     <form id="chat-form" class="composer" autocomplete="off">
-      <input id="user-input" type="text" placeholder="Ihre Frage…" aria-label="Ihre Frage" />
+      <input id="user-input" type="text" placeholder="Fragen Sie nach Überblick, Nutzen, Termin …" aria-label="Ihre Frage" />
       <button type="submit" aria-label="Senden">Senden</button>
     </form>
   </main>
