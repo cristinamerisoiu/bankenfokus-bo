@@ -1,219 +1,82 @@
-/* Minimal, elegant, recruiter-friendly UI
-   - Inter font
-   - Neutral palette
-   - Lots of whitespace
-   - Subtle contrast between roles
-*/
-
-:root {
-  --bg: #ffffff;
-  --ink: #0b0f14;
-  --muted: #6b7280;
-  --panel: #f7f8fa;
-  --line: #e5e7eb;
-
-  --bubble-bot: #101418;
-  --bubble-you: #eef2f7;
-  --bot-ink: #e8edf5;
-  --you-ink: #0b0f14;
-
-  --accent: #0ea5e9; /* subtle sky blue for focus/links */
-  --radius: 14px;
-
-  /* hero background fallback gradient for when image hasn't loaded yet */
-  --hero-fallback: linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.15));
+:root{
+  --bg:#0b0f14;
+  --panel:#0f141b;
+  --ink:#e5e7eb;
+  --muted:#9aa3ad;
+  --accent:#6bdcff;
+  --border:#1b2430;
+  --bubble:#0f1720;
+  --you:#121f2a;
+  --radius:16px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b0f14;
-    --ink: #e7eaee;
-    --muted: #9aa3af;
-    --panel: #0f141a;
-    --line: #1f2a37;
-
-    --bubble-bot: #121922;
-    --bubble-you: #0f141a;
-    --bot-ink: #e8edf5;
-    --you-ink: #e7eaee;
-
-    --accent: #7dd3fc;
-    --hero-fallback: linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.25));
-  }
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0; background:radial-gradient(1200px 800px at 80% -10%, #082033 0%, #0b0f14 55%), var(--bg);
+  color:var(--ink); font: 400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 }
 
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+.app{ max-width:880px; margin:0 auto; padding:24px 16px 100px; }
 
-body {
-  margin: 0;
-  font: 15px/1.5 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  background: var(--bg);
-  color: var(--ink);
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  position: relative;
+.header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px; border:1px solid var(--border); border-radius:var(--radius);
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.0));
+  backdrop-filter: blur(4px);
 }
 
-/* ========== FULL-BLEED HERO BACKGROUND (TOP HALF) ========== */
-/* Shows CMheader.jpg behind the UI, covering the top 50% of the viewport.
-   No HTML needed—pure CSS. */
-body::before {
-  content: "";
-  position: fixed;
-  z-index: 0;              /* behind everything */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 50vh;            /* upper half of screen */
-  background-image:
-    var(--hero-fallback),
-    url("CMheader.jpg");   /* make sure file exists at site root */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  pointer-events: none;    /* never block clicks */
-  /* soft vignette at the bottom edge to blend into page */
-  box-shadow: inset 0 -80px 120px -60px rgba(0,0,0,.35);
+.brand{ display:flex; gap:14px; align-items:center; }
+.mark{
+  width:44px; height:44px; border-radius:12px;
+  display:grid; place-items:center; font-weight:700; color:#001018;
+  background: conic-gradient(from 200deg, #6bdcff, #9a9cff, #6bdcff);
+  box-shadow:0 10px 40px rgba(107,220,255,0.35);
+}
+.title{ margin:0; font-weight:600; letter-spacing:.2px; }
+.subtitle{ margin:2px 0 0; color:var(--muted); font-size:14px; }
+
+.suggest{
+  display:flex; flex-wrap:wrap; gap:8px; margin:18px 4px 10px;
+}
+.suggest .chip{
+  border:1px solid var(--border); padding:8px 12px; border-radius:999px; cursor:pointer;
+  background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
+}
+.suggest .chip:hover{ border-color:#23445a; }
+
+.chat{
+  display:flex; flex-direction:column; gap:12px; margin-top:6px;
+}
+.msg{ display:flex; }
+.msg.bot{ justify-content:flex-start; }
+.msg.you{ justify-content:flex-end; }
+
+.bubble{
+  max-width:78ch; border:1px solid var(--border); padding:12px 14px; border-radius:14px;
+  background:var(--bubble); box-shadow: 0 6px 20px rgba(0,0,0,.25);
+}
+.msg.you .bubble{ background:var(--you); }
+
+.sender{
+  display:block; font-size:12px; color:var(--muted); margin-bottom:4px;
 }
 
-/* Keep the chat app exactly as-is (unchanged size/layout) */
-.app {
-  position: relative;
-  z-index: 1;              /* above the hero background */
-  width: min(880px, 100%);
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  overflow: hidden;
+.composer{
+  position:fixed; left:0; right:0; bottom:0;
+  background:linear-gradient(180deg, rgba(11,15,20,0), var(--bg) 40%);
+  padding:18px 12px 16px; display:flex; justify-content:center;
 }
-
-.header {
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--line);
+.composer input{
+  width:100%; max-width:820px; border:1px solid var(--border); background:var(--panel); color:var(--ink);
+  padding:14px 14px; border-radius:12px 0 0 12px; outline:none;
 }
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.composer button{
+  border:1px solid var(--border); border-left:0; background:linear-gradient(180deg, #0f1b24, #0e1620);
+  color:var(--ink); padding:0 18px; border-radius:0 12px 12px 0; cursor:pointer; font-weight:600;
 }
+.composer button:hover{ outline:1px solid #1b3a4e; }
 
-.mark {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: var(--ink);
-  color: var(--bg);
-  font-weight: 700;
-  letter-spacing: .5px;
-}
-
-.title { margin: 0; font-size: 18px; font-weight: 600; }
-.subtitle { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
-
-.chat {
-  height: min(66vh, 640px);
-  overflow-y: auto;
-  padding: 20px;
-  scroll-behavior: smooth;
-}
-
-.msg {
-  display: flex;
-  margin: 12px 0;
-}
-
-.msg.you { justify-content: flex-end; }
-.msg .bubble {
-  max-width: 78%;
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--line);
-  background: var(--bubble-bot);
-  color: var(--bot-ink);
-  box-shadow: none;
-  word-wrap: break-word;
-  white-space: normal;
-}
-
-.msg.you .bubble {
-  background: var(--bubble-you);
-  color: var(--you-ink);
-}
-
-.sender {
-  display: block;
-  font-size: 11px;
-  letter-spacing: .2px;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-
-.bubble p { margin: 8px 0; }
-.bubble ul, .bubble ol { margin: 6px 0 6px 20px; }
-.bubble li { margin: 4px 0; }
-
-.bubble a {
-  color: var(--accent);
-  text-decoration: none;
-}
-.bubble a:hover { text-decoration: underline; }
-
-.bubble code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  background: color-mix(in srgb, var(--ink) 8%, transparent);
-  padding: 2px 6px;
-  border-radius: 8px;
-}
-
-.bubble pre {
-  background: color-mix(in srgb, var(--ink) 8%, transparent);
-  padding: 12px;
-  border-radius: 12px;
-  overflow: auto;
-  border: 1px solid var(--line);
-}
-
-/* Composer */
-.composer {
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  border-top: 1px solid var(--line);
-  background: var(--panel);
-}
-
-.composer input[type="text"] {
-  flex: 1;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--ink);
-  outline: none;
-}
-
-.composer input[type="text"]::placeholder { color: var(--muted); }
-
-.composer button {
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--ink);
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.composer button:hover {
-  border-color: color-mix(in srgb, var(--ink) 24%, var(--line));
-}
-
-@media (max-width: 520px) {
-  .msg .bubble { max-width: 88%; }
-  .subtitle { display: none; }
-}
+a{ color:var(--accent); text-decoration:underline; }
+code, pre{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+ul,ol{ margin:6px 0 6px 18px; }
