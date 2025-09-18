@@ -1,6 +1,6 @@
 // BankenFokus-Assistent – static (no backend)
 // Desktop: chips row under header
-// Mobile: floating hamburger opens a left drawer with the 4 options
+// Mobile: top-left hamburger opens a left drawer with 4 big stacked options
 // No chips inside messages
 
 const PDF_URL     = "https://YOUR_CDN/BankenFokus.pdf"; // set real URL if available
@@ -19,7 +19,7 @@ const drawer       = document.getElementById("menu-drawer");
 const drawerClose  = document.getElementById("menu-close");
 const drawerOpts   = document.getElementById("drawer-options");
 
-// Chips
+// Options
 const CHIPS = [
   "Kurzüberblick",
   "Nutzen fürs Haus",
@@ -82,7 +82,7 @@ function showTypingThen(handler, delay=600){
   setTimeout(()=>{ wrap.remove(); handler(); }, delay);
 }
 
-// Render desktop chips row
+// Desktop chips row
 function renderChipsRow(){
   suggest.innerHTML = '';
   CHIPS.forEach(label=>{
@@ -95,7 +95,7 @@ function renderChipsRow(){
   });
 }
 
-// Render drawer chips (mobile)
+// Drawer options (mobile)
 function renderDrawerOptions(){
   drawerOpts.innerHTML = '';
   CHIPS.forEach(label=>{
@@ -116,11 +116,13 @@ function openDrawer(){
   drawer.classList.add('open');
   drawer.setAttribute('aria-hidden', 'false');
   menuBtn.setAttribute('aria-expanded', 'true');
+  document.body.classList.add('no-scroll');   // lock body scroll
 }
 function closeDrawer(){
   drawer.classList.remove('open');
   drawer.setAttribute('aria-hidden', 'true');
   menuBtn.setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('no-scroll');
 }
 
 // Events for drawer
@@ -145,7 +147,7 @@ function routeText(q){
   return null;
 }
 
-// Handlers
+// Chip handler
 function onChip(label, skipEcho=false){
   if (!skipEcho){
     const echo = document.createElement('div');
