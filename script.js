@@ -1,5 +1,7 @@
-// BankenFokus-Assistent – static, no backend.
-// NEW: chips are not sticky; inline options are injected into the chat after each bot reply.
+// BankenFokus-Assistent – static (no backend)
+// Desktop: chips row under header
+// Mobile: floating hamburger opens a left drawer with the 4 options
+// No chips inside messages
 
 const PDF_URL     = "https://YOUR_CDN/BankenFokus.pdf"; // set real URL if available
 const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
@@ -7,10 +9,15 @@ const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
 const CLONE_URL   = "https://peterka.ai";
 
 // Elements
-const chatBox = document.getElementById("chat-box");
-const suggest = document.getElementById("suggest");
-const form    = document.getElementById("chat-form");
-const input   = document.getElementById("user-input");
+const chatBox      = document.getElementById("chat-box");
+const suggest      = document.getElementById("suggest");
+const form         = document.getElementById("chat-form");
+const input        = document.getElementById("user-input");
+
+const menuBtn      = document.getElementById("menu-btn");
+const drawer       = document.getElementById("menu-drawer");
+const drawerClose  = document.getElementById("menu-close");
+const drawerOpts   = document.getElementById("drawer-options");
 
 // Chips
 const CHIPS = [
@@ -75,29 +82,8 @@ function showTypingThen(handler, delay=600){
   setTimeout(()=>{ wrap.remove(); handler(); }, delay);
 }
 
-// Inject chips as inline options inside the last bot bubble
-function addInlineOptions(){
-  const lastBubble = chatBox.lastElementChild?.querySelector('.bubble');
-  if (!lastBubble) return;
-
-  const box = document.createElement('div');
-  box.className = 'inline-options';
-
-  CHIPS.forEach(lbl=>{
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'chip';
-    b.textContent = lbl;
-    b.addEventListener('click', ()=> onChip(lbl));
-    box.appendChild(b);
-  });
-
-  lastBubble.appendChild(box);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-// Render chips row (top, non-sticky)
-function renderChips(){
+// Render desktop chips row
+function renderChipsRow(){
   suggest.innerHTML = '';
   CHIPS.forEach(label=>{
     const b = document.createElement('button');
@@ -109,7 +95,47 @@ function renderChips(){
   });
 }
 
-// Routing for free text
+// Render drawer chips (mobile)
+function renderDrawerOptions(){
+  drawerOpts.innerHTML = '';
+  CHIPS.forEach(label=>{
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = label;
+    b.addEventListener('click', ()=>{
+      closeDrawer();
+      onChip(label);
+    });
+    drawerOpts.appendChild(b);
+  });
+}
+
+// Drawer controls (mobile)
+function openDrawer(){
+  drawer.classList.add('open');
+  drawer.setAttribute('aria-hidden', 'false');
+  menuBtn.setAttribute('aria-expanded', 'true');
+}
+function closeDrawer(){
+  drawer.classList.remove('open');
+  drawer.setAttribute('aria-hidden', 'true');
+  menuBtn.setAttribute('aria-expanded', 'false');
+}
+
+// Events for drawer
+menuBtn.addEventListener('click', ()=> {
+  if (drawer.classList.contains('open')) closeDrawer(); else openDrawer();
+});
+drawerClose.addEventListener('click', closeDrawer);
+drawer.addEventListener('click', (e)=>{
+  if (e.target.dataset.close) closeDrawer();
+});
+document.addEventListener('keydown', (e)=>{
+  if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+});
+
+// Free-text routing
 function routeText(q){
   const t = (q||'').toLowerCase();
   if (/überblick|worum|intro|einführung/.test(t)) return "Kurzüberblick";
@@ -133,7 +159,6 @@ function onChip(label, skipEcho=false){
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', 'Christophers Clone wird in einem neuen Tab geöffnet.', 'bot');
       window.open(CLONE_URL, '_blank', 'noopener');
-      addInlineOptions();
     });
     return;
   }
@@ -146,16 +171,12 @@ function onChip(label, skipEcho=false){
         { label:'Termin buchen',  url: MEETING_URL },
         { label:'Zur Landingpage',url: LP_URL }
       ]);
-      addInlineOptions();
     });
     return;
   }
 
   if (ANSWERS[label]) {
-    showTypingThen(()=>{
-      addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot');
-      addInlineOptions();
-    });
+    showTypingThen(()=> addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot'));
   } else {
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
@@ -163,7 +184,6 @@ function onChip(label, skipEcho=false){
         { label:'Clone öffnen',  url: CLONE_URL },
         { label:'Termin buchen', url: MEETING_URL }
       ]);
-      addInlineOptions();
     });
   }
 }
@@ -182,16 +202,14 @@ form.addEventListener('submit', (e)=>{
   chatBox.scrollTop = chatBox.scrollHeight;
 
   const mapped = routeText(val);
-  if (mapped) {
-    onChip(mapped, true); // reuse same path (with typing + inline options)
-  } else {
+  if (mapped) onChip(mapped, true);
+  else {
     showTypingThen(()=>{
       addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
       addActions([
         { label:'Clone öffnen',  url: CLONE_URL },
         { label:'Termin buchen', url: MEETING_URL }
       ]);
-      addInlineOptions();
     });
   }
 });
@@ -199,6 +217,6 @@ form.addEventListener('submit', (e)=>{
 // Init
 (function init(){
   addMessage('BankenFokus-Assistent', 'Willkommen. Bitte wählen Sie eine Option.', 'bot');
-  renderChips();
-  addInlineOptions(); // show options immediately in the first bot bubble
+  renderChipsRow();       // desktop chips
+  renderDrawerOptions();  // mobile drawer options
 })();
