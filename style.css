@@ -36,18 +36,13 @@ body{
 .title{ margin:0; font-weight:600; letter-spacing:.2px; }
 .subtitle{ margin:2px 0 0; color:var(--muted); font-size:14px; }
 
-.suggest{
-  display:flex; flex-wrap:wrap; gap:8px; margin:18px 4px 10px;
+.suggest{ display:flex; flex-wrap:wrap; gap:8px; margin:18px 4px 10px; }
+.chip{
+  border:1px solid var(--border); padding:8px 12px; border-radius:999px; cursor:pointer; background:#0f141b;
 }
-.suggest .chip{
-  border:1px solid var(--border); padding:8px 12px; border-radius:999px; cursor:pointer;
-  background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
-}
-.suggest .chip:hover{ border-color:#23445a; }
+.chip:hover{ border-color:#23445a; }
 
-.chat{
-  display:flex; flex-direction:column; gap:12px; margin-top:6px;
-}
+.chat{ display:flex; flex-direction:column; gap:12px; margin-top:6px; }
 .msg{ display:flex; }
 .msg.bot{ justify-content:flex-start; }
 .msg.you{ justify-content:flex-end; }
@@ -58,9 +53,14 @@ body{
 }
 .msg.you .bubble{ background:var(--you); }
 
-.sender{
-  display:block; font-size:12px; color:var(--muted); margin-bottom:4px;
+.sender{ display:block; font-size:12px; color:var(--muted); margin-bottom:4px; }
+
+.actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.action-btn{
+  border:1px solid var(--border); background:#0f141b; color:var(--ink); padding:10px 14px; border-radius:10px;
+  text-decoration:none; font-weight:600; display:inline-block;
 }
+.action-btn:hover{ border-color:#23445a; }
 
 .composer{
   position:fixed; left:0; right:0; bottom:0;
@@ -78,5 +78,3 @@ body{
 .composer button:hover{ outline:1px solid #1b3a4e; }
 
 a{ color:var(--accent); text-decoration:underline; }
-code, pre{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
-ul,ol{ margin:6px 0 6px 18px; }
