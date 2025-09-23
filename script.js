@@ -49,7 +49,7 @@ const FALLBACK_TEXT =
 
 // 1) Greeting variety
 const GREETINGS = [
-  "Willkommen. Bitte wählen Sie eine Option.",
+  "Guten Tag.Bitte wählen Sie, ob Sie einen Überblick, den konkreten Nutzen für Ihr Haus oder Unterlagen und einen Termin wünschen.",
   "Hallo! Womit möchten Sie starten?",
   "Willkommen zurück - welche Option ist für Sie spannend?"
 ];
@@ -259,3 +259,4 @@ form.addEventListener('submit', (e)=>{
   renderChipsRow();       // desktop chips
   renderDrawerOptions();  // mobile drawer options
 })();
+
