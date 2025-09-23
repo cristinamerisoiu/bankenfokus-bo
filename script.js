@@ -2,11 +2,12 @@
 // Mobile: top-left hamburger opens a left drawer with 4 big stacked options
 // No chips inside messages
 
-const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de"; // set real URL if available
+const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de";
 const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
 const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
 const CLONE_URL   = "https://www.peterka.ai/";
 
+// Elements
 const chatBox      = document.getElementById("chat-box");
 const suggest      = document.getElementById("suggest");
 const form         = document.getElementById("chat-form");
@@ -17,27 +18,57 @@ const drawer       = document.getElementById("menu-drawer");
 const drawerClose  = document.getElementById("menu-close");
 const drawerOpts   = document.getElementById("drawer-options");
 
+// Chip labels (desktop row + mobile drawer)
 const CHIPS = [
   "Kurzüberblick",
   "Nutzen fürs Haus",
   "Termin und Unterlagen",
-  "Christophers Clone"
+  "Peterka Intelligence"
 ];
 
+// Answers / copy (refined)
 const ANSWERS = {
   "Kurzüberblick":
-    "Der Impuls zeigt, wie Führung in vernetzten Systemen handlungsfähig bleibt: klare Rollen zwischen Mensch & Maschine, Entscheidungen mit Daten UND Erfahrung sowie klare Prioritäten für Effizienz & Wirkung.",
+    "Der BankenFokus-Impuls zeigt, wie sich Führung im KI-Zeitalter neu ordnet: klare Trennung zwischen Aufgaben für Menschen und Maschinen, präzise Nutzung von Daten ohne den Erfahrungswert zu verlieren, und Prioritätensetzung entlang von Effizienz, Wirkung und Zukunftsfähigkeit.",
 
   "Nutzen fürs Haus":
-    "Ergebnisse: bessere Entscheidungsqualität, effizientere Abläufe, geschärfte Rollenprofile und eine Roadmap für 3–6 Monate. Fokus auf die konkrete Praxis Ihres Hauses – nicht Theorie.",
+    "Direkter Nutzen für Ihr Haus: bessere Entscheidungsqualität auf Basis valider Daten, schlankere Abläufe im Tagesgeschäft, und klar abgegrenzte Rollen, die Überlastung vermeiden. Das Ergebnis: mehr Orientierung im Veränderungsdruck - und konkrete Handlungsfähigkeit im Jetzt.",
 
   "Termin und Unterlagen":
     "Gern. Sie können Unterlagen ansehen oder einen Termin buchen.",
 
-  "Clone-Fallback":
-    "Für weitere Informationen können Sie Christophers Clone öffnen oder einen Gesprächstermin buchen."
+  "Peterka Intelligence":
+    "Peterka Intelligence bündelt über 20 Jahre Erfahrung von Christopher Peterka mit modernster KI. Sie erhalten präzise Impulse in natürlicher Gesprächsform."
 };
 
+// Softer fallback
+const FALLBACK_TEXT =
+  "Dazu habe ich keine fertige Antwort - aber Sie können gleich einen Termin buchen.";
+
+// --- Low-effort “chatbot feel” additions ---
+
+// 1) Greeting variety
+const GREETINGS = [
+  "Willkommen. Bitte wählen Sie eine Option.",
+  "Hallo! Womit möchten Sie starten?",
+  "Willkommen zurück - welche Option ist für Sie spannend?"
+];
+function pickGreeting(){
+  return GREETINGS[Math.floor(Math.random() * GREETINGS.length)];
+}
+
+// 4) Gentle follow-up nudge helper
+function addNudgeToLastBubble(text, linkLabel, linkChip){
+  const lastBubble = chatBox.lastElementChild?.querySelector('.bubble');
+  if (!lastBubble) return;
+  const p = document.createElement('p');
+  p.style.marginTop = '8px';
+  p.style.opacity = '.9';
+  p.innerHTML = `${text} <a href="#" style="text-decoration:underline" onclick="event.preventDefault(); onChip('${linkChip}', true);">${linkLabel}</a>`;
+  lastBubble.appendChild(p);
+}
+
+// UI helpers
 function addMessage(sender, text, who='bot'){
   const wrap = document.createElement('div');
   wrap.className = `msg ${who==='you' ? 'you' : 'bot'}`;
@@ -77,6 +108,7 @@ function showTypingThen(handler, delay=600){
   setTimeout(()=>{ wrap.remove(); handler(); }, delay);
 }
 
+// Desktop chips row
 function renderChipsRow(){
   suggest.innerHTML = '';
   CHIPS.forEach(label=>{
@@ -89,6 +121,7 @@ function renderChipsRow(){
   });
 }
 
+// Drawer options (mobile)
 function renderDrawerOptions(){
   drawerOpts.innerHTML = '';
   CHIPS.forEach(label=>{
@@ -104,6 +137,7 @@ function renderDrawerOptions(){
   });
 }
 
+// Drawer controls (mobile)
 function openDrawer(){
   drawer.classList.add('open');
   drawer.setAttribute('aria-hidden', 'false');
@@ -128,15 +162,17 @@ document.addEventListener('keydown', (e)=>{
   if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
 });
 
+// Map free text to a known option
 function routeText(q){
   const t = (q||'').toLowerCase();
   if (/überblick|worum|intro|einführung/.test(t)) return "Kurzüberblick";
   if (/nutzen|mehrwert|bringt|ergebnis/.test(t))   return "Nutzen fürs Haus";
   if (/termin|unterlagen|meeting|kalender|hubspot|pdf|dokument/.test(t)) return "Termin und Unterlagen";
-  if (/christopher?s?\s+clone/.test(t)) return "Christophers Clone";
+  if (/peterka|intelligence/.test(t)) return "Peterka Intelligence";
   return null;
 }
 
+// Handle option selection
 function onChip(label, skipEcho=false){
   if (!skipEcho){
     const echo = document.createElement('div');
@@ -146,9 +182,9 @@ function onChip(label, skipEcho=false){
     chatBox.scrollTop = chatBox.scrollHeight;
   }
 
-  if (label === "Christophers Clone") {
+  if (label === "Peterka Intelligence") {
     showTypingThen(()=>{
-      addMessage('BankenFokus-Assistent', 'Christophers Clone wird in einem neuen Tab geöffnet.', 'bot');
+      addMessage('BankenFokus-Assistent', 'Peterka Intelligence wird in einem neuen Tab geöffnet.', 'bot');
       window.open(CLONE_URL, '_blank', 'noopener');
     });
     return;
@@ -167,18 +203,25 @@ function onChip(label, skipEcho=false){
   }
 
   if (ANSWERS[label]) {
-    showTypingThen(()=> addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot'));
+    showTypingThen(()=>{
+      addMessage('BankenFokus-Assistent', ANSWERS[label], 'bot');
+      // Gentle follow-up nudge after Nutzen fürs Haus
+      if (label === "Nutzen fürs Haus") {
+        addNudgeToLastBubble("Möchten Sie die Details auch im PDF nachlesen?", "Jetzt öffnen", "Termin und Unterlagen");
+      }
+    });
   } else {
     showTypingThen(()=>{
-      addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
+      addMessage('BankenFokus-Assistent', FALLBACK_TEXT, 'bot');
       addActions([
-        { label:'Clone öffnen',  url: CLONE_URL },
-        { label:'Termin buchen', url: MEETING_URL }
+        { label:'Peterka Intelligence öffnen',  url: CLONE_URL },
+        { label:'Termin buchen',                url: MEETING_URL }
       ]);
     });
   }
 }
 
+// Free-text submit
 form.addEventListener('submit', (e)=>{
   e.preventDefault();
   const val = input.value.trim();
@@ -192,21 +235,27 @@ form.addEventListener('submit', (e)=>{
   chatBox.scrollTop = chatBox.scrollHeight;
 
   const mapped = routeText(val);
-  if (mapped) onChip(mapped, true);
-  else {
+  if (mapped) {
+    onChip(mapped, true);
+  } else {
     showTypingThen(()=>{
-      addMessage('BankenFokus-Assistent', ANSWERS["Clone-Fallback"], 'bot');
+      addMessage('BankenFokus-Assistent', FALLBACK_TEXT, 'bot');
       addActions([
-        { label:'Clone öffnen',  url: CLONE_URL },
-        { label:'Termin buchen', url: MEETING_URL }
+        { label:'Peterka Intelligence öffnen',  url: CLONE_URL },
+        { label:'Termin buchen',                url: MEETING_URL }
       ]);
     });
   }
 });
 
+// Init
 (function init(){
-  addMessage('BankenFokus-Assistent', 'Willkommen. Bitte wählen Sie eine Option.', 'bot');
+  // 3) Friendlier placeholder
+  if (input) input.placeholder = "Fragen Sie den Assistenten …";
+
+  // 1) Rotating greeting
+  addMessage('BankenFokus-Assistent', pickGreeting(), 'bot');
+
   renderChipsRow();       // desktop chips
   renderDrawerOptions();  // mobile drawer options
 })();
-
