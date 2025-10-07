@@ -3,7 +3,7 @@
 // No chips inside messages
 
 const PDF_URL     = "https://gannaca.de/hubfs/K%C3%BCnstliche%20Intelligenz%20veraendert%20alles%20%20wie%20begegnen%20Sie%20dem%20Wandel.pdf?hsLang=de-de";
-const MEETING_URL = "https://meetings.hubspot.com/peterka/erstes-kennenlernen-i-first-meeting-";
+const MEETING_URL = "https://meetings.hubspot.com/peterka/kostenfreies-strategiegesprach-";
 const LP_URL      = "https://gannaca.de/genossenschaftsbanken";
 const CLONE_URL   = "https://www.peterka.ai/";
 
@@ -259,5 +259,6 @@ form.addEventListener('submit', (e)=>{
   renderChipsRow();       // desktop chips
   renderDrawerOptions();  // mobile drawer options
 })();
+
 
 
